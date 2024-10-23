@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberQuest Academy</title>
+    <title>CyberQuest Academy - Course List</title>
     <style>
         /* Reset and Base Styles */
         * {
@@ -269,81 +269,8 @@
         <button class="category-btn">🛡️ Cybersecurity Fundamentals</button>
     </div>
 
-    <div class="course-grid">
-        <!-- Course Card 1 -->
-        <div class="course-card">
-            <img src="https://picsum.photos/200" alt="Ethical Hacking" class="course-image">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 75%"></div>
-            </div>
-            <div class="course-content">
-                <div class="course-header">
-                    <div>
-                        <h3 class="course-title">Ethical Hacking</h3>
-                        <p class="course-description">Master the art of ethical hacking and penetration testing</p>
-                    </div>
-                    <span class="course-rating">4.8⭐</span>
-                </div>
-                <div class="course-meta">
-                    <div>⏰ 10 weeks</div>
-                    <div>👥 2,345 students</div>
-                </div>
-                <div class="course-footer">
-                    <span class="level-badge">Advanced</span>
-                    <button class="start-btn">Start Learning →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Course Card 2 -->
-        <div class="course-card">
-            <img src="https://picsum.photos/200" alt="Network Security" class="course-image">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 30%"></div>
-            </div>
-            <div class="course-content">
-                <div class="course-header">
-                    <div>
-                        <h3 class="course-title">Network Security</h3>
-                        <p class="course-description">Learn to secure networks and prevent cyber attacks</p>
-                    </div>
-                    <span class="course-rating">4.9⭐</span>
-                </div>
-                <div class="course-meta">
-                    <div>⏰ 8 weeks</div>
-                    <div>👥 1,856 students</div>
-                </div>
-                <div class="course-footer">
-                    <span class="level-badge">Intermediate</span>
-                    <button class="start-btn">Start Learning →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Course Card 3 -->
-        <div class="course-card">
-            <img src="https://picsum.photos/200" alt="Cybersecurity Fundamentals" class="course-image">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 0%"></div>
-            </div>
-            <div class="course-content">
-                <div class="course-header">
-                    <div>
-                        <h3 class="course-title">Cybersecurity Fundamentals</h3>
-                        <p class="course-description">Build a strong foundation in cybersecurity principles</p>
-                    </div>
-                    <span class="course-rating">4.7⭐</span>
-                </div>
-                <div class="course-meta">
-                    <div>⏰ 6 weeks</div>
-                    <div>👥 3,156 students</div>
-                </div>
-                <div class="course-footer">
-                    <span class="level-badge">Beginner</span>
-                    <button class="start-btn">Start Learning →</button>
-                </div>
-            </div>
-        </div>
+    <div class="course-grid" id="courseGrid">
+        <!-- Courses will be dynamically added here -->
     </div>
 
     <button class="achievement-btn">🏆</button>
@@ -354,16 +281,33 @@
         const response = await fetch('/api/courses');
         const courses = await response.json();
         
-        const courseGrid = document.querySelector('.course-grid');
+        const courseGrid = document.getElementById('courseGrid');
         courseGrid.innerHTML = ''; // Clear existing content
         
         courses.forEach(course => {
+          const moduleCount = course.modules.length;
           const courseCard = `
             <div class="course-card">
               <img src="${course.background_image}" alt="${course.title}" class="course-image">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
               <div class="course-content">
-                <h3 class="course-title">${course.title}</h3>
-                <!-- Add other course details -->
+                <div class="course-header">
+                  <div>
+                    <h3 class="course-title">${course.title}</h3>
+                    <p class="course-description">${moduleCount} module${moduleCount !== 1 ? 's' : ''}</p>
+                  </div>
+                  <span class="course-rating">New</span>
+                </div>
+                <div class="course-meta">
+                  <div>⏰ ${moduleCount * 2} hours</div>
+                  <div>👥 0 students</div>
+                </div>
+                <div class="course-footer">
+                  <span class="level-badge">Beginner</span>
+                  <button class="start-btn">Start Learning →</button>
+                </div>
               </div>
             </div>
           `;

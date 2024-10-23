@@ -574,6 +574,22 @@ app.post("/api/complete-lesson", isAuthenticated, async (req, res) => {
   }
 });
 
+// Add this new route for fetching courses
+app.get("/api/courses", async (req, res) => {
+  try {
+    const courses = await Course.find({}, 'title background_image modules');
+    res.json(courses);
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Update the existing /courseList route
+app.get("/courseList", (req, res) => {
+  res.render("courseList");
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
   .on('error', (error) => {
