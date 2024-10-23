@@ -17,7 +17,6 @@
             background-color: #0B121F;
             color: white;
             min-height: 100vh;
-            padding: 20px;
         }
 
         .course-container {
@@ -219,5 +218,39 @@
     <div class="floating-progress">
         Total Points: 450 🛡️
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const examId = 'EXAM_ID'; // Replace with actual exam ID (e.g., from URL parameter)
+        const response = await fetch(`/api/exams/${examId}`);
+        const examData = await response.json();
+        
+        document.querySelector('.course-title').textContent = examData.title;
+        // Update other exam elements...
+        
+        // Populate questions
+        const questionCard = document.querySelector('.question-card');
+        examData.questions.forEach((question, index) => {
+          const questionElement = `
+            <div class="question-number">Question ${index + 1} <span class="marks">${question.points} marks</span></div>
+            <div class="question-text">${question.question_text}</div>
+            <div class="options">
+              ${question.options.map((option, optionIndex) => `
+                <div class="option">
+                  <div class="option-marker">${String.fromCharCode(65 + optionIndex)}</div>
+                  <div>${option}</div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          questionCard.innerHTML += questionElement;
+        });
+        
+      } catch (error) {
+        console.error('Error fetching exam data:', error);
+      }
+    });
+    </script>
 </body>
 </html>

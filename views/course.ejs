@@ -292,6 +292,35 @@ body {
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const courseId = 'COURSE_ID'; // Replace with actual course ID (e.g., from URL parameter)
+    const response = await fetch(`/api/courses/${courseId}`);
+    const courseData = await response.json();
+    
+    document.querySelector('.title').textContent = courseData.title;
+    // Update other course elements...
+    
+    // Populate modules
+    const modulesContainer = document.querySelector('.modules');
+    courseData.modules.forEach(module => {
+      const moduleElement = `
+        <div class="module">
+          <div class="module-icon">${module.module_id}</div>
+          <div class="module-content">
+            <div class="module-title">${module.title}</div>
+            <!-- Add other module details -->
+          </div>
+        </div>
+      `;
+      modulesContainer.innerHTML += moduleElement;
+    });
+    
+  } catch (error) {
+    console.error('Error fetching course data:', error);
+  }
+});
+
 // Create confetti effect
 function createConfetti() {
   const colors = ['#4ade80', '#22c55e', '#86efac'];

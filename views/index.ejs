@@ -85,7 +85,59 @@
             inertia: true,
         });
 
+        // Initialize Firebase with your config
+        const firebaseConfig = {
+            apiKey: "AIzaSyD43GgWneAiYeg165rG1LhKh8doaoR5a5o",
+            authDomain: "cyberquest-e8888.firebaseapp.com",
+            projectId: "cyberquest-e8888",
+            storageBucket: "cyberquest-e8888.appspot.com",
+            messagingSenderId: "90871092648",
+            appId: "1:90871092648:web:c8922165b9612daf8c799d"
+        };
 
+        // Check if Firebase app is already initialized
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        // Check authentication state
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in, update UI accordingly
+                document.getElementById('loginButton').style.display = 'none';
+                document.getElementById('profileButton').style.display = 'block';
+            } else {
+                // No user is signed in, update UI accordingly
+                document.getElementById('loginButton').style.display = 'block';
+                document.getElementById('profileButton').style.display = 'none';
+            }
+        });
+
+        // Function to handle form submission
+        document.querySelector('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/api/submit-contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Message sent successfully!');
+                    this.reset();
+                } else {
+                    alert('Failed to send message. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
     </script>
 </body>
 

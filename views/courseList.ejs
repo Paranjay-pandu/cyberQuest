@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galactic Academy</title>
+    <title>CyberQuest Academy</title>
     <style>
         /* Reset and Base Styles */
         * {
@@ -13,11 +13,10 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
-        body {
-            background-color: #111827;
-            color: #ecfdf5;
+        body, html {
+            background-color: #0B121F;
+            color: #A4B1CD;
             min-height: 100vh;
-            padding: 2rem;
         }
 
         /* Header Styles */
@@ -27,15 +26,15 @@
             align-items: center;
             margin-bottom: 2rem;
             padding: 1rem;
-            background: rgba(6, 78, 59, 0.2);
+            background: rgba(16, 26, 47, 0.2);
             border-radius: 1rem;
-            border: 1px solid rgba(110, 231, 183, 0.1);
+            border: 1px solid rgba(83, 209, 96, 0.1);
         }
 
         .logo {
             font-size: 2rem;
             font-weight: bold;
-            background: linear-gradient(to right, #34d399, #a7f3d0);
+            background: linear-gradient(to right, #53D160, #A7F3D0);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -53,16 +52,16 @@
             width: 100%;
             padding: 0.75rem 1rem 0.75rem 2.5rem;
             border-radius: 9999px;
-            background: #1f2937;
-            border: 1px solid rgba(110, 231, 183, 0.3);
-            color: #ecfdf5;
+            background: #1A2333;
+            border: 1px solid rgba(83, 209, 96, 0.3);
+            color: #A4B1CD;
             outline: none;
             transition: all 0.3s ease;
         }
 
         .search-bar input:focus {
-            border-color: #34d399;
-            box-shadow: 0 0 10px rgba(52, 211, 153, 0.2);
+            border-color: #53D160;
+            box-shadow: 0 0 10px rgba(83, 209, 96, 0.2);
         }
 
         /* Categories */
@@ -77,9 +76,9 @@
         .category-btn {
             padding: 0.75rem 1.5rem;
             border-radius: 9999px;
-            background: #1f2937;
-            border: 1px solid rgba(110, 231, 183, 0.3);
-            color: #ecfdf5;
+            background: #1A2333;
+            border: 1px solid rgba(83, 209, 96, 0.3);
+            color: #A4B1CD;
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
@@ -87,9 +86,9 @@
 
         .category-btn:hover,
         .category-btn.active {
-            background: rgba(52, 211, 153, 0.2);
-            border-color: #34d399;
-            color: #34d399;
+            background: rgba(83, 209, 96, 0.2);
+            border-color: #53D160;
+            color: #53D160;
         }
 
         /* Course Grid */
@@ -100,9 +99,9 @@
         }
 
         .course-card {
-            background: #1f2937;
+            background: #1A2333;
             border-radius: 1rem;
-            border: 1px solid rgba(110, 231, 183, 0.3);
+            border: 1px solid rgba(83, 209, 96, 0.3);
             overflow: hidden;
             transition: all 0.3s ease;
             position: relative;
@@ -110,7 +109,7 @@
 
         .course-card:hover {
             transform: translateY(-5px);
-            border-color: rgba(110, 231, 183, 0.6);
+            border-color: rgba(83, 209, 96, 0.6);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
@@ -126,12 +125,12 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: rgba(110, 231, 183, 0.1);
+            background: rgba(83, 209, 96, 0.1);
         }
 
         .progress-fill {
             height: 100%;
-            background: #34d399;
+            background: #53D160;
             transition: width 0.3s ease;
         }
 
@@ -149,20 +148,20 @@
         .course-title {
             font-size: 1.25rem;
             font-weight: bold;
-            color: #34d399;
+            color: #53D160;
             margin-bottom: 0.5rem;
         }
 
         .course-rating {
-            background: rgba(52, 211, 153, 0.2);
+            background: rgba(83, 209, 96, 0.2);
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
-            color: #34d399;
+            color: #53D160;
             font-weight: bold;
         }
 
         .course-description {
-            color: #9ca3af;
+            color: #8291B0;
             margin-bottom: 1rem;
             font-size: 0.875rem;
         }
@@ -172,7 +171,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
             margin-bottom: 1rem;
-            color: #9ca3af;
+            color: #8291B0;
             font-size: 0.875rem;
         }
 
@@ -183,15 +182,15 @@
         }
 
         .level-badge {
-            background: rgba(52, 211, 153, 0.1);
-            color: #34d399;
+            background: rgba(83, 209, 96, 0.1);
+            color: #53D160;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
             font-size: 0.875rem;
         }
 
         .start-btn {
-            color: #34d399;
+            color: #53D160;
             background: none;
             border: none;
             cursor: pointer;
@@ -203,7 +202,7 @@
         }
 
         .start-btn:hover {
-            color: #a7f3d0;
+            color: #A7F3D0;
         }
 
         /* Achievement Button */
@@ -211,8 +210,8 @@
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background: #34d399;
-            color: #111827;
+            background: #53D160;
+            color: #0B121F;
             width: 3.5rem;
             height: 3.5rem;
             border-radius: 9999px;
@@ -222,11 +221,11 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+            box-shadow: 0 4px 12px rgba(83, 209, 96, 0.3);
         }
 
         .achievement-btn:hover {
-            background: #a7f3d0;
+            background: #A7F3D0;
             transform: scale(1.1);
         }
 
@@ -252,9 +251,11 @@
     </style>
 </head>
 <body>
+    <%- include('cursor.ejs') %>
+    <%- include('navBar.ejs') %>
     <header class="header">
         <div class="logo">
-            🚀 Galactic Academy
+            🛡️ CyberQuest Academy
         </div>
         <div class="search-bar">
             <input type="text" placeholder="Search courses...">
@@ -262,30 +263,30 @@
     </header>
 
     <div class="categories">
-        <button class="category-btn active">🌍 All Courses</button>
-        <button class="category-btn">🚀 Programming</button>
-        <button class="category-btn">⭐ Mathematics</button>
-        <button class="category-btn">🧬 Science</button>
+        <button class="category-btn active">🌐 All Courses</button>
+        <button class="category-btn">🔒 Network Security</button>
+        <button class="category-btn">🕵️ Ethical Hacking</button>
+        <button class="category-btn">🛡️ Cybersecurity Fundamentals</button>
     </div>
 
     <div class="course-grid">
         <!-- Course Card 1 -->
         <div class="course-card">
-            <img src="https://picsum.photos/200" alt="Quantum Programming" class="course-image">
+            <img src="https://picsum.photos/200" alt="Ethical Hacking" class="course-image">
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 75%"></div>
             </div>
             <div class="course-content">
                 <div class="course-header">
                     <div>
-                        <h3 class="course-title">Quantum Programming</h3>
-                        <p class="course-description">Master quantum algorithms and computing principles</p>
+                        <h3 class="course-title">Ethical Hacking</h3>
+                        <p class="course-description">Master the art of ethical hacking and penetration testing</p>
                     </div>
                     <span class="course-rating">4.8⭐</span>
                 </div>
                 <div class="course-meta">
-                    <div>⏰ 12 weeks</div>
-                    <div>👥 1,234 students</div>
+                    <div>⏰ 10 weeks</div>
+                    <div>👥 2,345 students</div>
                 </div>
                 <div class="course-footer">
                     <span class="level-badge">Advanced</span>
@@ -296,21 +297,21 @@
 
         <!-- Course Card 2 -->
         <div class="course-card">
-            <img src="https://picsum.photos/200" alt="Space Mathematics" class="course-image">
+            <img src="https://picsum.photos/200" alt="Network Security" class="course-image">
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 30%"></div>
             </div>
             <div class="course-content">
                 <div class="course-header">
                     <div>
-                        <h3 class="course-title">Space Mathematics</h3>
-                        <p class="course-description">Advanced calculations for space navigation</p>
+                        <h3 class="course-title">Network Security</h3>
+                        <p class="course-description">Learn to secure networks and prevent cyber attacks</p>
                     </div>
                     <span class="course-rating">4.9⭐</span>
                 </div>
                 <div class="course-meta">
                     <div>⏰ 8 weeks</div>
-                    <div>👥 856 students</div>
+                    <div>👥 1,856 students</div>
                 </div>
                 <div class="course-footer">
                     <span class="level-badge">Intermediate</span>
@@ -321,21 +322,21 @@
 
         <!-- Course Card 3 -->
         <div class="course-card">
-            <img src="https://picsum.photos/200" alt="Alien Biology" class="course-image">
+            <img src="https://picsum.photos/200" alt="Cybersecurity Fundamentals" class="course-image">
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 0%"></div>
             </div>
             <div class="course-content">
                 <div class="course-header">
                     <div>
-                        <h3 class="course-title">Alien Biology</h3>
-                        <p class="course-description">Study extraterrestrial life forms</p>
+                        <h3 class="course-title">Cybersecurity Fundamentals</h3>
+                        <p class="course-description">Build a strong foundation in cybersecurity principles</p>
                     </div>
                     <span class="course-rating">4.7⭐</span>
                 </div>
                 <div class="course-meta">
-                    <div>⏰ 10 weeks</div>
-                    <div>👥 2,156 students</div>
+                    <div>⏰ 6 weeks</div>
+                    <div>👥 3,156 students</div>
                 </div>
                 <div class="course-footer">
                     <span class="level-badge">Beginner</span>
@@ -345,6 +346,34 @@
         </div>
     </div>
 
-    <button class="achievement-btn">✨</button>
+    <button class="achievement-btn">🏆</button>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('/api/courses');
+        const courses = await response.json();
+        
+        const courseGrid = document.querySelector('.course-grid');
+        courseGrid.innerHTML = ''; // Clear existing content
+        
+        courses.forEach(course => {
+          const courseCard = `
+            <div class="course-card">
+              <img src="${course.background_image}" alt="${course.title}" class="course-image">
+              <div class="course-content">
+                <h3 class="course-title">${course.title}</h3>
+                <!-- Add other course details -->
+              </div>
+            </div>
+          `;
+          courseGrid.innerHTML += courseCard;
+        });
+        
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    });
+    </script>
 </body>
 </html>

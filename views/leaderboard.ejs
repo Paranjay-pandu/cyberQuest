@@ -208,6 +208,25 @@
                 background: #53d160;
                 color: white;
             }
+
+            .filter-options {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+            }
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .pagination button {
+                margin: 0 5px;
+            }
+            .no-data {
+                text-align: center;
+                color: #888;
+                font-style: italic;
+            }
         </style>
 </head>
 
@@ -219,176 +238,159 @@
             </nav>
 
             <div class="container">
-                <div class="filters">
-                    <button class="filter-btn active">All Time</button>
-                    <button class="filter-btn">This Month</button>
-                    <button class="filter-btn">This Week</button>
+                <h1>Leaderboard</h1>
+                <div class="filter-options">
+                    <select id="sortBy">
+                        <option value="points">Points</option>
+                        <option value="streak.current">Current Streak</option>
+                        <option value="streak.highest">Highest Streak</option>
+                        <option value="level">Level</option>
+                    </select>
+                    <select id="orderBy">
+                        <option value="desc">Descending</option>
+                        <option value="asc">Ascending</option>
+                    </select>
+                    <select id="regionFilter">
+                        <option value="All">All Regions</option>
+                        <!-- Regions will be populated dynamically -->
+                    </select>
                 </div>
-
                 <div class="top-players">
-                    <!-- Top 3 players will be dynamically inserted here -->
+                    <!-- Top 3 players will be displayed here -->
                 </div>
-
                 <table class="leaderboard-table">
                     <thead>
                         <tr>
                             <th>Rank</th>
-                            <th>Player</th>
+                            <th>User</th>
                             <th>Points</th>
-                            <th>Streak</th>
-                            <th>Best Streak</th>
+                            <th>Current Streak</th>
+                            <th>Highest Streak</th>
+                            <th>Level</th>
+                            <th>Region</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Other players will be dynamically inserted here -->
+                        <!-- Leaderboard data will be populated here -->
                     </tbody>
                 </table>
+                <div class="pagination">
+                    <!-- Pagination buttons will be added here -->
+                </div>
             </div>
 
             <script>
-                document.addEventListener('DOMContentLoaded', async () => {
-                    try {
-                        const response = await fetch('/api/leaderboard');
-                        const leaderboardData = await response.json();
-                        
-                        // Update leaderboard with fetched data
-                        createTopPlayerCards(leaderboardData.slice(0, 3));
-                        createLeaderboardTable(leaderboardData.slice(3));
-                        
-                    } catch (error) {
-                        console.error('Error fetching leaderboard data:', error);
+            let currentPage = 1;
+            let totalPages = 1;
+
+            async function fetchLeaderboard(page = 1) {
+                const sortBy = document.getElementById('sortBy').value;
+                const orderBy = document.getElementById('orderBy').value;
+                const region = document.getElementById('regionFilter').value;
+
+                try {
+                    const response = await fetch(`/api/leaderboard?sort=${sortBy}&order=${orderBy}&region=${region}&page=${page}`);
+                    const data = await response.json();
+
+                    const leaderboardBody = document.querySelector('.leaderboard-table tbody');
+                    leaderboardBody.innerHTML = '';
+
+                    if (data.leaderboard.length === 0) {
+                        leaderboardBody.innerHTML = '<tr><td colspan="7" class="no-data">No data available</td></tr>';
+                    } else {
+                        data.leaderboard.forEach((entry, index) => {
+                            const row = `
+                                <tr>
+                                    <td>${(page - 1) * 20 + index + 1}</td>
+                                    <td>${entry.user.username}</td>
+                                    <td>${entry.points}</td>
+                                    <td>${entry.streak.current}</td>
+                                    <td>${entry.streak.highest}</td>
+                                    <td>${entry.level}</td>
+                                    <td>${entry.region || 'N/A'}</td>
+                                </tr>
+                            `;
+                            leaderboardBody.innerHTML += row;
+                        });
                     }
-                });
 
-                function createTopPlayerCards(topPlayers) {
-                    const topPlayersContainer = document.querySelector('.top-players');
-
-                    const trophyEmojis = ['🏆', '🥈', '🥉'];
-                    const positions = ['first', 'second', 'third'];
-
-                    topPlayersContainer.innerHTML = topPlayers.map((player, index) => `
-                <div class="top-player-card ${positions[index]}" onclick="navigateToProfile('${player._id}')">
-                    <span class="trophy">${trophyEmojis[index]}</span>
-                    <div class="top-player-avatar">
-                        <img src="${player.userId.avatar}" alt="${player.userId.username}">
-                    </div>
-                    <h3>${player.userId.username}</h3>
-                    <div class="points">${player.points.toLocaleString()} pts</div>
-                    <div class="streak-badge">
-                        <span>🔥</span>
-                        <span>${player.current_streak} days</span>
-                    </div>
-                </div>
-            `).join('');
-                }
-
-                function createLeaderboardTable(otherPlayers) {
-                    const tableBody = document.querySelector('.leaderboard-table tbody');
-
-                    tableBody.innerHTML = otherPlayers.map((player, index) => `
-                <tr onclick="navigateToProfile('${player._id}')">
-                    <td class="rank-cell">${index + 4}</td>
-                    <td>
-                        <div class="player-cell">
-                            <div class="player-avatar">
-                                <img src="${player.userId.avatar}" alt="${player.userId.username}">
+                    // Update top players
+                    const topPlayers = document.querySelector('.top-players');
+                    topPlayers.innerHTML = '';
+                    data.leaderboard.slice(0, 3).forEach((entry, index) => {
+                        const playerCard = `
+                            <div class="top-player-card ${['first', 'second', 'third'][index]}">
+                                <h3>${entry.user.username}</h3>
+                                <p>${entry.points} points</p>
+                                <p>Level ${entry.level}</p>
                             </div>
-                            <div>
-                                <div>${player.userId.username}</div>
-                                <div style="font-size: 0.8rem; color: #53d160;">
-                                    ${player.userId.tags.join(' • ')}
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="points">${player.points.toLocaleString()}</td>
-                    <td>
-                        <div class="streak-badge">🔥 ${player.current_streak}</div>
-                    </td>
-                    <td>${player.highest_streak}</td>
-                </tr>
-            `).join('');
-                }
-
-                function navigateToProfile(userId) {
-                    // In a real application, this would navigate to the profile page
-                    window.location.href = `/userProfile`;
-                    <!-- window.location.href = `/profile/${userId}`; -->
-                }
-
-                // Initialize the page
-                function initializePage() {
-                    createTopPlayerCards();
-                    createLeaderboardTable();
-
-                    // Animate top player cards
-                    gsap.from('.top-player-card', {
-                        y: 50,
-                        opacity: 0,
-                        duration: 0.8,
-                        stagger: 0.2,
-                        ease: 'power2.out'
+                        `;
+                        topPlayers.innerHTML += playerCard;
                     });
 
-                    // Animate table rows
+                    // Update pagination
+                    currentPage = data.page;
+                    totalPages = data.pages;
+                    updatePagination();
+
+                    // Animate new content
                     gsap.from('.leaderboard-table tbody tr', {
-                        x: -50,
                         opacity: 0,
-                        duration: 0.5,
-                        stagger: 0.1,
-                        ease: 'power2.out'
+                        y: 20,
+                        stagger: 0.05,
+                        duration: 0.5
                     });
+
+                    gsap.from('.top-player-card', {
+                        opacity: 0,
+                        y: 20,
+                        stagger: 0.2,
+                        duration: 0.5
+                    });
+
+                } catch (error) {
+                    console.error('Error fetching leaderboard:', error);
+                }
+            }
+
+            function updatePagination() {
+                const pagination = document.querySelector('.pagination');
+                pagination.innerHTML = '';
+
+                if (currentPage > 1) {
+                    pagination.innerHTML += `<button onclick="fetchLeaderboard(${currentPage - 1})">Previous</button>`;
                 }
 
-                // Filter button functionality
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        document.querySelector('.filter-btn.active').classList.remove('active');
-                        btn.classList.add('active');
+                pagination.innerHTML += `<span>Page ${currentPage} of ${totalPages}</span>`;
 
-                        // Animate table refresh
-                        gsap.to('.leaderboard-table tbody tr', {
-                            opacity: 0,
-                            x: -20,
-                            stagger: 0.05,
-                            duration: 0.3,
-                            onComplete: () => {
-                                // In a real app, this would fetch new data
-                                createLeaderboardTable();
-                                gsap.from('.leaderboard-table tbody tr', {
-                                    opacity: 0,
-                                    x: 20,
-                                    stagger: 0.05,
-                                    duration: 0.3
-                                });
-                            }
-                        });
+                if (currentPage < totalPages) {
+                    pagination.innerHTML += `<button onclick="fetchLeaderboard(${currentPage + 1})">Next</button>`;
+                }
+            }
+
+            async function populateRegions() {
+                try {
+                    const response = await fetch('/api/regions');
+                    const regions = await response.json();
+                    const regionFilter = document.getElementById('regionFilter');
+                    regions.forEach(region => {
+                        if (region) { // Only add non-empty regions
+                            regionFilter.innerHTML += `<option value="${region}">${region}</option>`;
+                        }
                     });
-                });
+                } catch (error) {
+                    console.error('Error fetching regions:', error);
+                }
+            }
 
-                // Hover animations for table rows
-                document.addEventListener('mouseover', (e) => {
-                    const row = e.target.closest('tr');
-                    if (row && !row.closest('thead')) {
-                        gsap.to(row, {
-                            backgroundColor: 'rgba(83, 209, 96, 0.1)',
-                            duration: 0.3
-                        });
-                    }
-                });
+            document.addEventListener('DOMContentLoaded', () => {
+                fetchLeaderboard();
+                populateRegions();
 
-                document.addEventListener('mouseout', (e) => {
-                    const row = e.target.closest('tr');
-                    if (row && !row.closest('thead')) {
-                        gsap.to(row, {
-                            backgroundColor: 'transparent',
-                            duration: 0.3
-                        });
-                    }
-                });
-
-                // Initialize the page
-                initializePage();
+                document.getElementById('sortBy').addEventListener('change', () => fetchLeaderboard());
+                document.getElementById('orderBy').addEventListener('change', () => fetchLeaderboard());
+                document.getElementById('regionFilter').addEventListener('change', () => fetchLeaderboard());
+            });
             </script>
 </body>
 

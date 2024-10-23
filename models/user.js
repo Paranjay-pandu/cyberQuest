@@ -1,15 +1,20 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
+  firebaseUid: { 
+    type: String, 
+    required: true,
+    unique: true
+  },
   username: { 
     type: String, 
     required: true,
     trim: true,
-    unique: true // Add unique constraint
+    unique: true
   },
   email: { 
     type: String, 
-    required: true, // Make email required
+    required: true,
     unique: true,
     trim: true,
     lowercase: true
@@ -18,7 +23,7 @@ const userSchema = new mongoose.Schema({
   streak: {
     current: { type: Number, default: 0, min: 0 },
     highest: { type: Number, default: 0, min: 0 },
-    lastUpdated: { type: Date, default: Date.now } // Add last updated date
+    lastUpdated: { type: Date, default: Date.now }
   },
   stats: [
     {
@@ -43,31 +48,15 @@ const userSchema = new mongoose.Schema({
       ],
     },
   ],
+  totalXp: { type: Number, default: 0 },
+  xp: { type: Number, default: 0 },
+  level: { type: Number, default: 1 },
   banners: { type: String, trim: true },
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
   region: { type: String, trim: true },
   created_at: { type: Date, default: Date.now },
 }, { timestamps: true });
-
-userSchema.methods.updateStreak = function () {
-  const today = new Date();
-  const streakDays = this.stats.filter(stat => {
-    const points = stat.daily_points.reduce((acc, points) => acc + points, 0);
-    return points > 0 && new Date(stat.date).setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0);
-  }).length;
-
-  // Update current streak
-  this.streak.current = streakDays;
-
-  // Update highest streak if current streak is greater
-  if (this.streak.current > this.streak.highest) {
-    this.streak.highest = this.streak.current;
-  }
-
-  // Save the updated user document
-  return this.save();
-};
 
 module.exports = mongoose.model("User", userSchema);
 

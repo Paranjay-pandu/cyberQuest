@@ -63,10 +63,25 @@
         #nav #right button:hover{
             box-shadow: #3db845 2px 3px 10px,#3db845 -2px -3px 10px ;
         }
+        
+        #nav #right button#loginButton,
+        #nav #right button#logoutButton {
+            background-color: green;
+            padding: 0.5vw 1vw;
+            border-radius: 1vw;
+            border: none;
+            color: rgba(255, 255, 255, 0.675);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        #nav #right button#loginButton:hover,
+        #nav #right button#logoutButton:hover {
+            box-shadow: #3db845 2px 3px 10px, #3db845 -2px -3px 10px;
+        }
     </style>
 </head>
 <body>
-    
     <nav id="nav">
         <div id="left">
             <a href="/">
@@ -79,14 +94,70 @@
                 <h1>Leaderboard</h1>
             </a>
             
-            <a href="/userProfile">
+            <a href="/userProfile" id="profileLink" style="display: none;">
                 <h1>Profile</h1>
             </a>
             <a href="#aboutUs">
                 <h1>About Us</h1>
             </a>
-            <button>Sign in / Login </button>
+            <button id="loginButton">Sign in / Login</button>
+            <button id="logoutButton" style="display: none;">Logout</button>
         </div>
     </nav>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+        // Initialize Firebase with your config
+        const firebaseConfig = {
+            apiKey: "AIzaSyD43GgWneAiYeg165rG1LhKh8doaoR5a5o",
+            authDomain: "cyberquest-e8888.firebaseapp.com",
+            projectId: "cyberquest-e8888",
+            storageBucket: "cyberquest-e8888.appspot.com",
+            messagingSenderId: "90871092648",
+            appId: "1:90871092648:web:c8922165b9612daf8c799d"
+        };
+
+        // Check if Firebase app is already initialized
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const loginButton = document.getElementById('loginButton');
+        const logoutButton = document.getElementById('logoutButton');
+        const profileLink = document.getElementById('profileLink');
+
+        // Check authentication state
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in
+                loginButton.style.display = 'none';
+                logoutButton.style.display = 'inline-block';
+                profileLink.style.display = 'inline-block';
+            } else {
+                // No user is signed in
+                loginButton.style.display = 'inline-block';
+                logoutButton.style.display = 'none';
+                profileLink.style.display = 'none';
+            }
+        });
+
+        // Login button click handler
+        loginButton.addEventListener('click', function() {
+            window.location.href = '/login';
+        });
+
+        // Logout button click handler
+        logoutButton.addEventListener('click', function() {
+            firebase.auth().signOut().then(() => {
+                // Sign-out successful.
+                localStorage.removeItem('authToken');
+                window.location.href = '/';
+            }).catch((error) => {
+                // An error happened.
+                console.error('Logout error:', error);
+            });
+        });
+    </script>
 </body>
 </html>

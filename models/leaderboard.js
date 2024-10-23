@@ -1,22 +1,31 @@
 const mongoose = require("mongoose");
 
 const leaderboardSchema = new mongoose.Schema({
-  userId: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the User model
+    ref: "User",
     required: true,
+    unique: true
   },
   points: {
     type: Number,
-    default: 0, // Default points can be set to 0
+    default: 0,
   },
-  highest_streak: {
-    type: Number,
-    default: 0, // Default highest streak can be set to 0
+  streak: {
+    current: { type: Number, default: 0 },
+    highest: { type: Number, default: 0 },
   },
-  current_streak: {
+  level: {
     type: Number,
-    default: 0, // Default current streak can be set to 0
+    default: 1,
+  },
+  region: {
+    type: String,
+    trim: true,
+  },
+  lastUpdated: {
+    type: Date,
+    default: Date.now,
   },
 });
 

@@ -13,7 +13,6 @@
                 background-color: #6bdb9baf;
             }
 
-
             * {
                 margin: 0;
                 padding: 0;
@@ -52,6 +51,7 @@
                 gap: 2rem;
                 position: relative;
                 overflow: hidden;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             }
 
             .profile-avatar {
@@ -74,7 +74,7 @@
                 bottom: 0;
                 right: 0;
                 background: #53d160;
-                color: white;
+                color: #0B121F;
                 padding: 0.5rem;
                 border-radius: 50%;
                 width: 40px;
@@ -91,7 +91,7 @@
 
             .username {
                 font-size: 2rem;
-                color: white;
+                color: #53d160;
                 margin-bottom: 1rem;
             }
 
@@ -106,7 +106,8 @@
                 background: rgba(11, 18, 31, 0.8);
                 border-radius: 10px;
                 padding: 1.5rem;
-                transition: transform 0.3s ease;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
 
             .stat-card:hover {
@@ -125,7 +126,7 @@
 
             .progress-fill {
                 height: 100%;
-                background: #53d160;
+                background: linear-gradient(90deg, #53d160, #6bdb9b);
                 width: 0%;
                 transition: width 1s ease;
             }
@@ -162,7 +163,6 @@
                 0% {
                     opacity: 0.8;
                 }
-
                 100% {
                     opacity: 1;
                 }
@@ -185,6 +185,11 @@
                 justify-content: center;
                 color: #53d160;
             }
+
+            h3 {
+                color: #53d160;
+                margin-bottom: 1rem;
+            }
         </style>
 </head>
 
@@ -192,158 +197,200 @@
     <%- include('cursor.ejs') %>
     <%- include('navBar.ejs') %>
     <nav class="nav">
-            <div class="logo">GameED Profile</div>
-        </nav>
+        <div class="logo">GameED Profile</div>
+    </nav>
 
-        <div class="profile-container">
-            <div class="profile-header">
-                <div class="profile-avatar">
-                    <img src="/api/placeholder/150/150" alt="User Avatar">
-                    <div class="level-badge">42</div>
-                </div>
-                <div class="profile-info">
-                    <h1 class="username">GameMaster42</h1>
-                    <div class="tags">
-                        <span class="tag">RPG Expert</span>
-                        <span class="tag">Quiz Champion</span>
-                        <span class="tag">Mentor</span>
-                    </div>
-                    <div class="streak-container">
-                        <span class="streak-flame">🔥</span>
-                        <span>12 Day Streak</span>
-                        <span class="highest-streak">(Highest: 15 days)</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="levelProgress"></div>
-                    </div>
-                    <div>Level Progress: 8,540 / 10,000 XP</div>
-                </div>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="<%= user.avatarUrl || '/images/default-avatar.png' %>" alt="User Avatar">
+                <div class="level-badge"><%= user.level %></div>
             </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Achievements</h3>
-                    <div class="achievement">
-                        <div class="achievement-icon">🏆</div>
-                        <div>
-                            <div>Quiz Master</div>
-                            <small>Completed 50 quizzes with >90% score</small>
-                        </div>
-                    </div>
-                    <div class="achievement">
-                        <div class="achievement-icon">⭐</div>
-                        <div>
-                            <div>Course Champion</div>
-                            <small>Completed 10 courses</small>
-                        </div>
-                    </div>
+            <div class="profile-info">
+                <h1 class="username"><%= user.username %></h1>
+                <div class="tags">
+                    <% user.tags.forEach(tag => { %>
+                        <span class="tag"><%= tag %></span>
+                    <% }) %>
                 </div>
-
-                <div class="stat-card">
-                    <h3>Recent Activity</h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="activityProgress"></div>
-                    </div>
-                    <div>Daily Goals: 3/5 Completed</div>
+                <div class="streak-container">
+                    <span class="streak-flame">🔥</span>
+                    <span><%= user.streak.current %> Day Streak</span>
+                    <span class="highest-streak">(Highest: <%= user.streak.highest %> days)</span>
                 </div>
-
-                <div class="stat-card">
-                    <h3>Course Progress</h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="courseProgress"></div>
-                    </div>
-                    <div>Current Course: Advanced Web Development</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="levelProgress" style="width: <%= levelProgress %>%"></div>
                 </div>
+                <div>Level Progress: <%= user.xp %> / <%= user.level * 1000 %> XP</div>
             </div>
         </div>
 
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Achievements</h3>
+                <% user.achievements.forEach(achievement => { %>
+                    <div class="achievement">
+                        <div class="achievement-icon"><%= achievement.icon %></div>
+                        <div>
+                            <div><%= achievement.name %></div>
+                            <small><%= achievement.description %></small>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
 
+            <div class="stat-card">
+                <h3>Recent Activity</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="activityProgress" style="width: <%= activityProgress %>%"></div>
+                </div>
+                <div>Daily Goals: <%= user.dailyGoalsCompleted %>/5 Completed</div>
+            </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
-            integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script>
-            // GSAP Animations
-            document.addEventListener('DOMContentLoaded', () => {
-                // Animate progress bars
-                gsap.to("#levelProgress", {
-                    width: "85%",
-                    duration: 1.5,
-                    ease: "power2.out"
-                });
+            <div class="stat-card">
+                <h3>Course Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="courseProgress" style="width: <%= courseProgress %>%"></div>
+                </div>
+                <div>Current Course: <%= user.currentCourse %></div>
+            </div>
+        </div>
+    </div>
 
-                gsap.to("#activityProgress", {
-                    width: "60%",
-                    duration: 1.5,
-                    ease: "power2.out"
-                });
-
-                gsap.to("#courseProgress", {
-                    width: "75%",
-                    duration: 1.5,
-                    ease: "power2.out"
-                });
-
-                // Animate cards on scroll
-                gsap.from(".stat-card", {
-                    y: 50,
-                    opacity: 0,
-                    duration: 0.8,
-                    stagger: 0.2,
-                    scrollTrigger: {
-                        trigger: ".stats-grid",
-                        start: "top center+=100",
-                        toggleActions: "play none none reverse"
-                    }
-                });
-
-                // Animate profile header
-                gsap.from(".profile-header", {
-                    y: -50,
-                    opacity: 0,
-                    duration: 1,
-                    ease: "power2.out"
-                });
-
-                // Hover animations for stat cards
-                document.querySelectorAll('.stat-card').forEach(card => {
-                    card.addEventListener('mouseenter', () => {
-                        gsap.to(card, {
-                            scale: 1.02,
-                            duration: 0.3,
-                            ease: "power2.out"
-                        });
-                    });
-
-                    card.addEventListener('mouseleave', () => {
-                        gsap.to(card, {
-                            scale: 1,
-                            duration: 0.3,
-                            ease: "power2.out"
-                        });
-                    });
-                });
-            });
-
-            document.addEventListener('DOMContentLoaded', async () => {
-                try {
-                    const response = await fetch('/api/user');
-                    const user = await response.json();
-                    
-                    // Update user profile information
-                    document.querySelector('.username').textContent = user.username;
-                    document.querySelector('.level-badge').textContent = user.level || 1;
-                    document.querySelector('#levelProgress').style.width = `${(user.xp % 1000) / 10}%`;
-                    document.querySelector('.streak-container span:last-child').textContent = `${user.streak.current} Day Streak`;
-                    document.querySelector('.highest-streak').textContent = `(Highest: ${user.streak.highest} days)`;
-                    
-                    // Update other sections as needed
-                    
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+        integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+        // GSAP Animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate cards on scroll
+            gsap.from(".stat-card", {
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: ".stats-grid",
+                    start: "top center+=100",
+                    toggleActions: "play none none reverse"
                 }
             });
-        </script>
+
+            // Animate profile header
+            gsap.from(".profile-header", {
+                y: -50,
+                opacity: 0,
+                duration: 1,
+                ease: "power2.out"
+            });
+
+            // Hover animations for stat cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, {
+                        scale: 1.02,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        scale: 1,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+            });
+
+            // Initialize Firebase with your config
+            const firebaseConfig = {
+                apiKey: "AIzaSyD43GgWneAiYeg165rG1LhKh8doaoR5a5o",
+                authDomain: "cyberquest-e8888.firebaseapp.com",
+                projectId: "cyberquest-e8888",
+                storageBucket: "cyberquest-e8888.appspot.com",
+                messagingSenderId: "90871092648",
+                appId: "1:90871092648:web:c8922165b9612daf8c799d"
+            };
+
+            // Check if Firebase app is already initialized
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+
+            // Function to fetch user data
+            async function fetchUserData() {
+                try {
+                    const user = firebase.auth().currentUser;
+                    if (!user) {
+                        throw new Error('No user logged in');
+                    }
+                    const token = await user.getIdToken(true);
+                    const response = await fetch('/api/user', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Failed to fetch user data');
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                    throw error;
+                }
+            }
+
+            // Function to update UI with user data
+            function updateUI(user) {
+                if (!user) {
+                    console.error('No user data available');
+                    return;
+                }
+                document.querySelector('.username').textContent = user.username || 'Unknown User';
+                document.querySelector('.level-badge').textContent = user.level || 1;
+                
+                // Update progress bars
+                document.querySelector('#levelProgress').style.width = `${user.levelProgress}%`;
+                document.querySelector('#activityProgress').style.width = `${user.activityProgress}%`;
+                document.querySelector('#courseProgress').style.width = `${user.courseProgress}%`;
+                
+                document.querySelector('.streak-container span:nth-child(2)').textContent = `${user.streak?.current || 0} Day Streak`;
+                document.querySelector('.highest-streak').textContent = `(Highest: ${user.streak?.highest || 0} days)`;
+                // Update other UI elements as needed
+            }
+
+            // Check authentication and fetch user data
+            firebase.auth().onAuthStateChanged(async function(user) {
+                if (user) {
+                    try {
+                        const userData = await fetchUserData();
+                        if (userData) {
+                            updateUI(userData);
+                        } else {
+                            throw new Error('Failed to fetch user data');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        if (error.message === 'User not found') {
+                            alert('User profile not found. Please complete your registration.');
+                            // Redirect to a registration completion page
+                            window.location.href = '/complete-registration';
+                        } else {
+                            alert('Failed to load user profile. Please try logging in again.');
+                            window.location.href = '/login';
+                        }
+                    }
+                } else {
+                    // Redirect to login page if not authenticated
+                    window.location.href = '/login';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
