@@ -1,0 +1,9 @@
+import { initializeApp } from "firebase/app";
+const firebaseConfig = {
+  apiKey: "AIzaSyD43GgWneAiYeg165rG1LhKh8doaoR5a5o",
+  authDomain: "cyberquest-e8888.firebaseapp.com",
+  projectId: "cyberquest-e8888",
+  storageBucket: "cyberquest-e8888.appspot.com",
+  messagingSenderId: "90871092648",
+  appId: "1:90871092648:web:c8922165b9612daf8c799d"
+};

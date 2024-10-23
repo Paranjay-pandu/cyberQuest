@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberQuest - Cybersecurity Training</title>
+    <%- include('links.ejs') %>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Solway", serif;
+        }
+
+        body {
+            background-color: #0B121F;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .course-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .course-header {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+        }
+
+        .course-title {
+            font-size: 2.5rem;
+            color: #53d160;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.2);
+            height: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 60%;
+            height: 100%;
+            background: #53d160;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .module-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+        }
+
+        .module-level {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(83, 209, 96, 0.2);
+            color: #53d160;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .module-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .points-badge {
+            display: inline-block;
+            background: #53d160;
+            color: #0B121F;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .quiz-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(83, 209, 96, 0.2);
+        }
+
+        .quiz-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #53d160;
+            font-weight: 500;
+        }
+
+        .feedback-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+        }
+
+        .rating-stars {
+            color: #FFC107;
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .feedback-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .floating-progress {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #53d160;
+            color: #0B121F;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(83, 209, 96, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <%- include('cursor.ejs') %>
+    <%- include('navBar.ejs') %>
+    <div class="course-container">
+        <div class="course-header">
+            <h1 class="course-title">CyberQuest: Cybersecurity Mastery</h1>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <p>Overall Progress: 60%</p>
+        </div>
+
+        <div class="modules-grid">
+            <!-- Module 1 -->
+            <div class="module-card">
+                <span class="module-level">Level 1</span>
+                <h2 class="module-title">Cybersecurity Fundamentals</h2>
+                <p>Learn the basics of cybersecurity and common threats</p>
+                <div class="points-badge">+100 pts</div>
+                <div class="quiz-section">
+                    <div class="quiz-badge">
+                        <span>🔒</span>
+                        <span>2 Quizzes Available</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="module-card">
+                <span class="module-level">Level 2</span>
+                <h2 class="module-title">Network Security</h2>
+                <p>Explore network vulnerabilities and protection strategies</p>
+                <div class="points-badge">+150 pts</div>
+                <div class="quiz-section">
+                    <div class="quiz-badge">
+                        <span>🔒</span>
+                        <span>3 Quizzes Available</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="module-card">
+                <span class="module-level">Level 3</span>
+                <h2 class="module-title">Ethical Hacking</h2>
+                <p>Learn ethical hacking techniques and penetration testing</p>
+                <div class="points-badge">+200 pts</div>
+                <div class="quiz-section">
+                    <div class="quiz-badge">
+                        <span>🔒</span>
+                        <span>4 Quizzes Available</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feedback-section">
+            <h2>Course Feedback</h2>
+            <div class="rating-stars">★★★★☆</div>
+            <div class="feedback-card">
+                <p>"Excellent cybersecurity course! The hands-on labs really helped me understand complex concepts."</p>
+                <small>Posted by Alice - 3 days ago</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-progress">
+        Total Points: 450 🛡️
+    </div>
+</body>
+</html>

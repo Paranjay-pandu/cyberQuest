@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+:root {
+  --primary: #4ade80;
+  --primary-dark: #22c55e;
+  --bg-dark: #111827;
+  --bg-card: #1f2937;
+  --text: #f3f4f6;
+  --text-secondary: #9ca3af;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-dark);
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--text);
+}
+
+.exam-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: var(--bg-card);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(74, 222, 128, 0.1);
+}
+
+.timer {
+  background: rgba(74, 222, 128, 0.1);
+  padding: 12px 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: pulse 2s infinite;
+}
+
+.timer-icon {
+  color: var(--primary);
+  font-size: 24px;
+}
+
+.timer-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--bg-card);
+  border-radius: 4px;
+  overflow: hidden;
+  width: 200px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  width: var(--progress, 0%);
+  transition: width 0.3s ease;
+}
+
+.question-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(74, 222, 128, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.question-number {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.marks {
+  background: rgba(74, 222, 128, 0.1);
+  color: var(--primary);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.question-text {
+  font-size: 18px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.options {
+  display: grid;
+  gap: 16px;
+}
+
+.option {
+  background: var(--bg-dark);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 12px;
+  padding: 16px 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.option:hover {
+  border-color: var(--primary);
+  transform: translateX(8px);
+}
+
+.option.selected {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: var(--primary);
+}
+
+.option-marker {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.selected .option-marker {
+  background: var(--primary);
+  color: var(--bg-dark);
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.nav-button {
+  background: var(--bg-card);
+  border: none;
+  color: var(--text);
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-button:hover {
+  background: var(--primary);
+}
+
+.question-palette {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  padding: 24px;
+  background: var(--bg-card);
+  border-radius: 16px;
+}
+
+.palette-item {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: var(--bg-dark);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  transition: all 0.3s ease;
+}
+
+.palette-item:hover {
+  border-color: var(--primary);
+  transform: scale(1.1);
+}
+
+.palette-item.answered {
+  background: var(--primary);
+  color: var(--bg-dark);
+}
+
+.palette-item.current {
+  border-color: var(--primary);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+.submit-panel {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  padding: 16px 32px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.stats {
+  display: flex;
+  gap: 24px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.submit-btn {
+  background: var(--primary);
+  color: var(--bg-dark);
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+}
+</style>
+</head>
+<body>
+<div class="exam-container">
+  <div class="header">
+    <div>
+      <h1>Advanced Web Development Exam</h1>
+      <p>Section 1: JavaScript Fundamentals</p>
+    </div>
+    <div class="timer">
+      <span class="timer-icon">⏱</span>
+      <span class="timer-text">59:30</span>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-number">
+      Question 1 of 30
+      <span class="marks">4 marks</span>
+    </div>
+    <div class="question-text">
+      What is the output of the following code snippet?
+      <pre style="background: var(--bg-dark); padding: 16px; border-radius: 8px; overflow-x: auto;">
+const promise = new Promise(resolve => resolve(1))
+  .then(num => num + 1)
+  .then(num => num * 2);
+
+promise.then(result => console.log(result));</pre>
+    </div>
+    <div class="options">
+      <div class="option">
+        <div class="option-marker">A</div>
+        <div>1</div>
+      </div>
+      <div class="option">
+        <div class="option-marker">B</div>
+        <div>2</div>
+      </div>
+      <div class="option selected">
+        <div class="option-marker">C</div>
+        <div>4</div>
+      </div>
+      <div class="option">
+        <div class="option-marker">D</div>
+        <div>undefined</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navigation">
+    <button class="nav-button">← Previous</button>
+    <div class="question-palette">
+      <div class="palette-item answered">1</div>
+      <div class="palette-item current">2</div>
+      <div class="palette-item">3</div>
+      <div class="palette-item">4</div>
+      <div class="palette-item">5</div>
+      <div class="palette-item">6</div>
+      <div class="palette-item">7</div>
+      <div class="palette-item">8</div>
+      <div class="palette-item">9</div>
+      <div class="palette-item">10</div>
+    </div>
+    <button class="nav-button">Next →</button>
+  </div>
+</div>
+
+<div class="submit-panel">
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">10/30</div>
+      <div class="stat-label">Attempted</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">15</div>
+      <div class="stat-label">Not Visited</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">5</div>
+      <div class="stat-label">Marked for Review</div>
+    </div>
+  </div>
+  <button class="submit-btn">Submit Exam</button>
+</div>
+
+<script>
+// Timer functionality
+let timeLeft = 60 * 60; // 60 minutes
+function updateTimer() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  document.querySelector('.timer-text').textContent = 
+    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  if(timeLeft > 0) {
+    timeLeft--;
+    setTimeout(updateTimer, 1000);
+  }
+}
+updateTimer();
+
+// Option selection
+document.querySelectorAll('.option').forEach(option => {
+  option.addEventListener('click', () => {
+    // Remove selected class from all options
+    document.querySelectorAll('.option').forEach(opt => 
+      opt.classList.remove('selected'));
+    // Add selected class to clicked option
+    option.classList.add('selected');
+    // Update question palette
+    document.querySelector('.palette-item.current')
+      .classList.add('answered');
+  });
+});
+
+// Navigation buttons
+document.querySelectorAll('.nav-button').forEach(button => {
+  button.addEventListener('click', () => {
+    // Add animation effect
+    button.style.transform = 'scale(0.95)';
+    setTimeout(() => button.style.transform = '', 100);
+  });
+});
+
+// Question palette navigation
+document.querySelectorAll('.palette-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelector('.palette-item.current')
+      .classList.remove('current');
+    item.classList.add('current');
+  });
+});
+
+// Submit button effect
+const submitBtn = document.querySelector('.submit-btn');
+submitBtn.addEventListener('mouseenter', () => {
+  submitBtn.style.transform = 'scale(1.05)';
+});
+submitBtn.addEventListener('mouseleave', () => {
+  submitBtn.style.transform = '';
+});
+</script>
+</body>
+</html>

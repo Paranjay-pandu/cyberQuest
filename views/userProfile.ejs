@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamified Profile</title>
+    <%- include('links.ejs') %>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+        <style>
+            ::selection {
+                color: rgb(0, 0, 0);
+                background-color: #6bdb9baf;
+            }
+
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "solway";
+            }
+
+            body {
+                background-color: #0B121F;
+                color: #A4B1CD;
+            }
+
+            .nav {
+                background-color: #0b121fa6;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.8vw 10vw;
+                backdrop-filter: blur(5px);
+                position: sticky;
+                top: 0;
+                z-index: 997;
+            }
+
+            .profile-container {
+                padding: 2rem 10vw;
+            }
+
+            .profile-header {
+                background: rgba(11, 18, 31, 0.8);
+                border-radius: 15px;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                display: flex;
+                gap: 2rem;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .profile-avatar {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                border: 4px solid #53d160;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .profile-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .level-badge {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background: #53d160;
+                color: white;
+                padding: 0.5rem;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+            }
+
+            .profile-info {
+                flex: 1;
+            }
+
+            .username {
+                font-size: 2rem;
+                color: white;
+                margin-bottom: 1rem;
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+
+            .stat-card {
+                background: rgba(11, 18, 31, 0.8);
+                border-radius: 10px;
+                padding: 1.5rem;
+                transition: transform 0.3s ease;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(83, 209, 96, 0.2);
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 8px;
+                background: rgba(164, 177, 205, 0.1);
+                border-radius: 4px;
+                margin: 1rem 0;
+                overflow: hidden;
+            }
+
+            .progress-fill {
+                height: 100%;
+                background: #53d160;
+                width: 0%;
+                transition: width 1s ease;
+            }
+
+            .tags {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                margin: 1rem 0;
+            }
+
+            .tag {
+                background: rgba(83, 209, 96, 0.2);
+                color: #53d160;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+            }
+
+            .streak-container {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin: 1rem 0;
+            }
+
+            .streak-flame {
+                color: #53d160;
+                font-size: 1.5rem;
+                animation: flicker 1s infinite alternate;
+            }
+
+            @keyframes flicker {
+                0% {
+                    opacity: 0.8;
+                }
+
+                100% {
+                    opacity: 1;
+                }
+            }
+
+            .achievement {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin: 0.5rem 0;
+            }
+
+            .achievement-icon {
+                width: 40px;
+                height: 40px;
+                background: rgba(83, 209, 96, 0.2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #53d160;
+            }
+        </style>
+</head>
+
+<body>
+    <%- include('cursor.ejs') %>
+    <%- include('navBar.ejs') %>
+    <nav class="nav">
+            <div class="logo">GameED Profile</div>
+        </nav>
+
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <img src="/api/placeholder/150/150" alt="User Avatar">
+                    <div class="level-badge">42</div>
+                </div>
+                <div class="profile-info">
+                    <h1 class="username">GameMaster42</h1>
+                    <div class="tags">
+                        <span class="tag">RPG Expert</span>
+                        <span class="tag">Quiz Champion</span>
+                        <span class="tag">Mentor</span>
+                    </div>
+                    <div class="streak-container">
+                        <span class="streak-flame">🔥</span>
+                        <span>12 Day Streak</span>
+                        <span class="highest-streak">(Highest: 15 days)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="levelProgress"></div>
+                    </div>
+                    <div>Level Progress: 8,540 / 10,000 XP</div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Achievements</h3>
+                    <div class="achievement">
+                        <div class="achievement-icon">🏆</div>
+                        <div>
+                            <div>Quiz Master</div>
+                            <small>Completed 50 quizzes with >90% score</small>
+                        </div>
+                    </div>
+                    <div class="achievement">
+                        <div class="achievement-icon">⭐</div>
+                        <div>
+                            <div>Course Champion</div>
+                            <small>Completed 10 courses</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Recent Activity</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="activityProgress"></div>
+                    </div>
+                    <div>Daily Goals: 3/5 Completed</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Course Progress</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="courseProgress"></div>
+                    </div>
+                    <div>Current Course: Advanced Web Development</div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+            integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+            // GSAP Animations
+            document.addEventListener('DOMContentLoaded', () => {
+                // Animate progress bars
+                gsap.to("#levelProgress", {
+                    width: "85%",
+                    duration: 1.5,
+                    ease: "power2.out"
+                });
+
+                gsap.to("#activityProgress", {
+                    width: "60%",
+                    duration: 1.5,
+                    ease: "power2.out"
+                });
+
+                gsap.to("#courseProgress", {
+                    width: "75%",
+                    duration: 1.5,
+                    ease: "power2.out"
+                });
+
+                // Animate cards on scroll
+                gsap.from(".stat-card", {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.2,
+                    scrollTrigger: {
+                        trigger: ".stats-grid",
+                        start: "top center+=100",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+
+                // Animate profile header
+                gsap.from(".profile-header", {
+                    y: -50,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+
+                // Hover animations for stat cards
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        gsap.to(card, {
+                            scale: 1.02,
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+                    });
+
+                    card.addEventListener('mouseleave', () => {
+                        gsap.to(card, {
+                            scale: 1,
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+                    });
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    const response = await fetch('/api/user');
+                    const user = await response.json();
+                    
+                    // Update user profile information
+                    document.querySelector('.username').textContent = user.username;
+                    document.querySelector('.level-badge').textContent = user.level || 1;
+                    document.querySelector('#levelProgress').style.width = `${(user.xp % 1000) / 10}%`;
+                    document.querySelector('.streak-container span:last-child').textContent = `${user.streak.current} Day Streak`;
+                    document.querySelector('.highest-streak').textContent = `(Highest: ${user.streak.highest} days)`;
+                    
+                    // Update other sections as needed
+                    
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            });
+        </script>
+</body>
+
+</html>

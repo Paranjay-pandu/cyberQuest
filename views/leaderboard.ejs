@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameED Leaderboard</title>
+    <%- include('links.ejs') %>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+        <style>
+            ::selection {
+                color: rgb(0, 0, 0);
+                background-color: #6bdb9baf;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "Solway";
+            }
+
+            body {
+                background-color: #0B121F;
+                color: #A4B1CD;
+                min-height: 100vh;
+            }
+
+            .nav {
+                background-color: #0b121fa6;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.8vw 10vw;
+                backdrop-filter: blur(5px);
+                position: sticky;
+                top: 0;
+                z-index: 997;
+            }
+
+            .container {
+                padding: 2rem 10vw;
+            }
+
+            .top-players {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+                margin-bottom: 4rem;
+                padding: 1rem;
+            }
+
+            .top-player-card {
+                background: rgba(11, 18, 31, 0.8);
+                border-radius: 15px;
+                padding: 2rem;
+                text-align: center;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.3s ease;
+            }
+
+            .top-player-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 5px;
+            }
+
+            .top-player-card.first::before {
+                background: gold;
+            }
+
+            .top-player-card.second::before {
+                background: silver;
+            }
+
+            .top-player-card.third::before {
+                background: #cd7f32;
+            }
+
+            .top-player-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .top-player-avatar {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                margin: 0 auto 1rem;
+                border: 3px solid #53d160;
+                overflow: hidden;
+            }
+
+            .top-player-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .trophy {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                font-size: 2rem;
+            }
+
+            .first .trophy {
+                color: gold;
+            }
+
+            .second .trophy {
+                color: silver;
+            }
+
+            .third .trophy {
+                color: #cd7f32;
+            }
+
+            .leaderboard-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: rgba(11, 18, 31, 0.8);
+                border-radius: 15px;
+                overflow: hidden;
+            }
+
+            .leaderboard-table th {
+                background: rgba(83, 209, 96, 0.1);
+                padding: 1rem;
+                text-align: left;
+                font-weight: normal;
+            }
+
+            .leaderboard-table tr {
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .leaderboard-table tr:hover {
+                background: rgba(83, 209, 96, 0.1);
+            }
+
+            .leaderboard-table td {
+                padding: 1rem;
+                border-bottom: 1px solid rgba(164, 177, 205, 0.1);
+            }
+
+            .rank-cell {
+                width: 80px;
+                font-weight: bold;
+            }
+
+            .player-cell {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .player-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                overflow: hidden;
+            }
+
+            .player-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .streak-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3rem;
+                background: rgba(83, 209, 96, 0.1);
+                padding: 0.3rem 0.6rem;
+                border-radius: 12px;
+                font-size: 0.9rem;
+            }
+
+            .points {
+                color: #53d160;
+                font-weight: bold;
+            }
+
+            .filters {
+                margin-bottom: 2rem;
+                display: flex;
+                gap: 1rem;
+            }
+
+            .filter-btn {
+                background: rgba(83, 209, 96, 0.1);
+                border: none;
+                padding: 0.8rem 1.5rem;
+                color: #A4B1CD;
+                border-radius: 20px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .filter-btn.active {
+                background: #53d160;
+                color: white;
+            }
+        </style>
+</head>
+
+<body>
+    <%- include('cursor.ejs') %>
+        <%- include('navBar.ejs') %>
+            <nav class="nav">
+                <div class="logo">GameED Leaderboard</div>
+            </nav>
+
+            <div class="container">
+                <div class="filters">
+                    <button class="filter-btn active">All Time</button>
+                    <button class="filter-btn">This Month</button>
+                    <button class="filter-btn">This Week</button>
+                </div>
+
+                <div class="top-players">
+                    <!-- Top 3 players will be dynamically inserted here -->
+                </div>
+
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Points</th>
+                            <th>Streak</th>
+                            <th>Best Streak</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Other players will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', async () => {
+                    try {
+                        const response = await fetch('/api/leaderboard');
+                        const leaderboardData = await response.json();
+                        
+                        // Update leaderboard with fetched data
+                        createTopPlayerCards(leaderboardData.slice(0, 3));
+                        createLeaderboardTable(leaderboardData.slice(3));
+                        
+                    } catch (error) {
+                        console.error('Error fetching leaderboard data:', error);
+                    }
+                });
+
+                function createTopPlayerCards(topPlayers) {
+                    const topPlayersContainer = document.querySelector('.top-players');
+
+                    const trophyEmojis = ['🏆', '🥈', '🥉'];
+                    const positions = ['first', 'second', 'third'];
+
+                    topPlayersContainer.innerHTML = topPlayers.map((player, index) => `
+                <div class="top-player-card ${positions[index]}" onclick="navigateToProfile('${player._id}')">
+                    <span class="trophy">${trophyEmojis[index]}</span>
+                    <div class="top-player-avatar">
+                        <img src="${player.userId.avatar}" alt="${player.userId.username}">
+                    </div>
+                    <h3>${player.userId.username}</h3>
+                    <div class="points">${player.points.toLocaleString()} pts</div>
+                    <div class="streak-badge">
+                        <span>🔥</span>
+                        <span>${player.current_streak} days</span>
+                    </div>
+                </div>
+            `).join('');
+                }
+
+                function createLeaderboardTable(otherPlayers) {
+                    const tableBody = document.querySelector('.leaderboard-table tbody');
+
+                    tableBody.innerHTML = otherPlayers.map((player, index) => `
+                <tr onclick="navigateToProfile('${player._id}')">
+                    <td class="rank-cell">${index + 4}</td>
+                    <td>
+                        <div class="player-cell">
+                            <div class="player-avatar">
+                                <img src="${player.userId.avatar}" alt="${player.userId.username}">
+                            </div>
+                            <div>
+                                <div>${player.userId.username}</div>
+                                <div style="font-size: 0.8rem; color: #53d160;">
+                                    ${player.userId.tags.join(' • ')}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="points">${player.points.toLocaleString()}</td>
+                    <td>
+                        <div class="streak-badge">🔥 ${player.current_streak}</div>
+                    </td>
+                    <td>${player.highest_streak}</td>
+                </tr>
+            `).join('');
+                }
+
+                function navigateToProfile(userId) {
+                    // In a real application, this would navigate to the profile page
+                    window.location.href = `/userProfile`;
+                    <!-- window.location.href = `/profile/${userId}`; -->
+                }
+
+                // Initialize the page
+                function initializePage() {
+                    createTopPlayerCards();
+                    createLeaderboardTable();
+
+                    // Animate top player cards
+                    gsap.from('.top-player-card', {
+                        y: 50,
+                        opacity: 0,
+                        duration: 0.8,
+                        stagger: 0.2,
+                        ease: 'power2.out'
+                    });
+
+                    // Animate table rows
+                    gsap.from('.leaderboard-table tbody tr', {
+                        x: -50,
+                        opacity: 0,
+                        duration: 0.5,
+                        stagger: 0.1,
+                        ease: 'power2.out'
+                    });
+                }
+
+                // Filter button functionality
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelector('.filter-btn.active').classList.remove('active');
+                        btn.classList.add('active');
+
+                        // Animate table refresh
+                        gsap.to('.leaderboard-table tbody tr', {
+                            opacity: 0,
+                            x: -20,
+                            stagger: 0.05,
+                            duration: 0.3,
+                            onComplete: () => {
+                                // In a real app, this would fetch new data
+                                createLeaderboardTable();
+                                gsap.from('.leaderboard-table tbody tr', {
+                                    opacity: 0,
+                                    x: 20,
+                                    stagger: 0.05,
+                                    duration: 0.3
+                                });
+                            }
+                        });
+                    });
+                });
+
+                // Hover animations for table rows
+                document.addEventListener('mouseover', (e) => {
+                    const row = e.target.closest('tr');
+                    if (row && !row.closest('thead')) {
+                        gsap.to(row, {
+                            backgroundColor: 'rgba(83, 209, 96, 0.1)',
+                            duration: 0.3
+                        });
+                    }
+                });
+
+                document.addEventListener('mouseout', (e) => {
+                    const row = e.target.closest('tr');
+                    if (row && !row.closest('thead')) {
+                        gsap.to(row, {
+                            backgroundColor: 'transparent',
+                            duration: 0.3
+                        });
+                    }
+                });
+
+                // Initialize the page
+                initializePage();
+            </script>
+</body>
+
+</html>

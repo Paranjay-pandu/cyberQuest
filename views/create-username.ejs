@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Username - Cyber Quest</title>
+    <%- include('links.ejs') %>
+    <!-- Add your styles here -->
+</head>
+<body>
+    <div class="container">
+        <h1>Create Your Username</h1>
+        <form id="usernameForm">
+            <input type="text" id="username" name="username" required>
+            <button type="submit">Create Username</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('usernameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            
+            fetch('/create-username', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/userProfile';
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to create username. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>

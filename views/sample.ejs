@@ -1,0 +1,92 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Quest</title>
+    <link rel="shortcut icon" href="./images/LogoIcon.png" type="image/x-icon">
+    <link rel="stylesheet" href="./stylesheets/sample.css">
+    <%- include('links.ejs') %>
+</head>
+
+<body>
+    <%- include('cursor.ejs') %>
+    <%- include('navBar.ejs') %>
+    <div id="main">
+        <video autoplay loop muted src="./videos/web_background.mp4"></video>
+        <div id="page1">
+            <div id="leftSection">
+                <h1>Become a <span>Cybersecurity</span> Expert Today!</h1>
+                <p>Learn industry-leading skills and <span>secure your future.</span> <br> Protect against
+                    real-world
+                    cyber <span>threats</span> with confidence.</p>
+                <button>Learn More</button>
+            </div>
+            <div id="rightSection">
+                <img src="./images/LogoIcon.png" alt="" id="dragElement">
+            </div>
+        </div>
+        <%- include('aboutUs.ejs') %>
+            <div id="contact">
+                <h1>Contact Us</h1>
+                <form action="/submit-contact" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter your name"
+                            autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email"
+                            autocomplete="email">
+                    </div>
+
+                    <div class="form-group select-wrapper">
+                        <label for="type">Type:</label>
+                        <select id="type" name="type" required>
+                            <option value="" disabled selected>Select message type</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="report">Report Issue</option>
+                            <option value="comment">General Comment</option>
+                        </select>
+                        <span class="select-arrow">▼</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="4" required
+                            placeholder="Enter your message"></textarea>
+                    </div>
+
+                    <div class="form-controls">
+                        <button type="submit">
+                            Send Message
+                            <span class="button-icon">→</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+        integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"
+        integrity="sha512-G7Wpe/pbg+zjyyM9HgQY6kacLAy+580lmA8DUXmZtioTI5FkaCRoLOaCLoeblrZABs7KZFD03cfSV9j7nmwxfw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        gsap.registerPlugin(Draggable);
+
+        Draggable.create("#dragElement", {
+            type: "x,y",
+            edgeResistance: 0,
+            bounds: "#main",
+            inertia: true,
+        });
+
+
+    </script>
+</body>
+
+</html>

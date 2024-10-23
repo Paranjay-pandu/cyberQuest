@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('links.ejs') %>
+    <style>
+        #nav{
+            background-color: #0b121fa6;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #A4B1CD;
+            font-size: 0.8vw;
+            padding: 1.8vw 10vw;
+            backdrop-filter: blur(5px);
+            position: sticky;
+            top: 0;
+            z-index: 997;
+        }
+        
+        #nav #left{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        #nav #left a{
+            font-weight: 100;
+            color: #A4B1CD;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1.5vw;
+        }
+        
+        #nav #left a img{
+            height: 2vw;
+        }
+        
+        #nav #right{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5vw;
+        }
+        
+        #nav #right a{
+            font-weight: 100;
+            color: #A4B1CD;
+            text-decoration: none;
+        }
+        
+        #nav #right button{
+            background-color: green;
+            padding: 0.5vw 1vw;
+            border-radius: 1vw;
+            border: none;
+            color: rgba(255, 255, 255, 0.675);
+            transition: all 0.3s ease;
+        }
+        
+        #nav #right button:hover{
+            box-shadow: #3db845 2px 3px 10px,#3db845 -2px -3px 10px ;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav id="nav">
+        <div id="left">
+            <a href="/">
+                <img src="./images/LogoIcon.png" alt="">
+                <img src="./images/LogoTitle.png" alt="">
+            </a>
+        </div>
+        <div id="right">
+            <a href="/leaderboard">
+                <h1>Leaderboard</h1>
+            </a>
+            
+            <a href="/userProfile">
+                <h1>Profile</h1>
+            </a>
+            <a href="#aboutUs">
+                <h1>About Us</h1>
+            </a>
+            <button>Sign in / Login </button>
+        </div>
+    </nav>
+</body>
+</html>

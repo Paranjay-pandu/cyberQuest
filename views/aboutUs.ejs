@@ -1,0 +1,378 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #aboutUs {
+            padding: 5vw 10vw;
+            color: white;
+            min-height: 50vh;
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+            background: linear-gradient(45deg, rgba(0,0,0,0.8), rgba(0,0,0,0.95));
+            overflow: hidden;
+        }
+        
+        #aboutUs::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('./none') repeat;
+            opacity: 0.1;
+            animation: backgroundScroll 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        #aboutUs #left {
+            width: 50%;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .section-header {
+            margin-bottom: 2vw;
+            position: relative;
+        }
+        
+        #aboutUs #left h1 {
+            font-size: 2.1vw;
+            color: #53d160;
+            text-shadow: 0 0 10px rgba(83, 209, 96, 0.5);
+            margin-bottom: 1vw;
+        }
+        
+        .level-indicator {
+            background: rgba(83, 209, 96, 0.1);
+            padding: 0.5vw;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+        }
+        
+        .level {
+            background: #53d160;
+            padding: 0.3vw 0.8vw;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.8vw;
+            letter-spacing: 1px;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 0.4vw;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            width: 60%;
+            height: 100%;
+            background: #53d160;
+            animation: progressPulse 2s infinite;
+        }
+        
+        #aboutUs #left h2 {
+            font-size: 1.8vw;
+            color: #53d160c4;
+            display: flex;
+            align-items: center;
+            gap: 0.5vw;
+            margin: 2vw 0 1vw;
+            transition: transform 0.3s ease;
+        }
+        
+        #aboutUs #left h2:hover {
+            transform: translateX(10px);
+        }
+        
+        .icon {
+            font-size: 1.5vw;
+        }
+        
+        .points {
+            font-size: 1vw;
+            background: rgba(83, 209, 96, 0.2);
+            padding: 0.3vw 0.8vw;
+            border-radius: 15px;
+            margin-left: auto;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s ease;
+        }
+        
+        .content-section:hover .points {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        #aboutUs #left p {
+            margin: 0 2vw;
+            color: #A4B1CD;
+            line-height: 1.6;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards;
+        }
+        
+        .content-block {
+            background: rgba(255,255,255,0.05);
+            padding: 1.5vw;
+            border-radius: 10px;
+            border: 1px solid rgba(83, 209, 96, 0.2);
+            margin: 1vw 0;
+            transition: all 0.3s ease;
+        }
+        
+        .content-block:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(83, 209, 96, 0.2);
+        }
+        
+        .achievement-unlocked {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .achievement-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #53d160;
+            padding: 1vw;
+            border-radius: 50%;
+            animation: badgePulse 2s infinite;
+        }
+        
+        #right {
+            width: 50%;
+            position: relative;
+            height: 100%;
+        }
+        
+        .floating-elements {
+            position: sticky;
+            top: 0;
+            height: 60vh;
+            z-index: inherit;
+        }
+        
+        .cyber-element {
+            position: absolute;
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        .cyber-element img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(83, 209, 96, 0.5));
+        }
+        
+        .shield {
+            top: 20%;
+            left: 20%;
+        }
+        
+        .lock {
+            top: 40%;
+            left: 50%;
+        }
+        
+        .code {
+            top: 60%;
+            left: 30%;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes backgroundScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @media (max-width: 768px) {
+            #aboutUs {
+                flex-direction: column;
+                padding: 5vw 5vw;
+            }
+        
+            #aboutUs #left {
+                width: 100%;
+            }
+        
+            #aboutUs #left h1 {
+                font-size: 24px;
+            }
+        
+            #aboutUs #left h2 {
+                font-size: 20px;
+            }
+        
+            #right {
+                width: 100%;
+                height: 300px;
+                margin-top: 2rem;
+            }
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(83, 209, 96, 0.1) 0%, transparent 10%),
+                radial-gradient(circle at 70% 60%, rgba(83, 209, 96, 0.1) 0%, transparent 10%),
+                radial-gradient(circle at 40% 80%, rgba(83, 209, 96, 0.1) 0%, transparent 10%);
+            animation: particleFloat 10s infinite linear;
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px) translateX(10px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="aboutUs">
+        <div id="left">
+            <div class="section-header">
+                <h1>About Us</h1>
+                <div class="level-indicator">
+                    <span class="level">LEVEL 1</span>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="content-block achievement-unlocked">
+                <div class="achievement-badge">🏆</div>
+                <p>At Cyber Quest, we are dedicated to empowering individuals and organizations with the knowledge and
+                    skills to safeguard against cyber threats. Our mission is to provide top-tier cybersecurity training
+                    through engaging, interactive, and gamified learning experiences.</p>
+            </div>
+    
+            <div class="content-section" data-points="100">
+                <h2><span class="icon">🎯</span> Our Vision <span class="points">+100 XP</span></h2>
+                <div class="content-block">
+                    <p>We envision a world where everyone is equipped with the essential cybersecurity skills to protect
+                        their digital lives. Through our innovative platform, we aim to make cybersecurity education
+                        accessible and enjoyable for all.</p>
+                </div>
+            </div>
+    
+            <div class="content-section" data-points="150">
+                <h2><span class="icon">🎮</span> Our Approach <span class="points">+150 XP</span></h2>
+                <div class="content-block">
+                    <p>Cyber Quest stands out by offering a gamified approach to learning, making complex cybersecurity
+                        concepts easy to understand and apply. Our courses are designed by industry experts and tailored to
+                        keep learners engaged and motivated.</p>
+                </div>
+            </div>
+    
+            <div class="content-section" data-points="200">
+                <h2><span class="icon">👥</span> Meet the Team <span class="points">+200 XP</span></h2>
+                <div class="content-block">
+                    <p>Our team consists of passionate professionals with extensive experience in cybersecurity and
+                        education. We are committed to providing a high-quality learning experience and continuously
+                        improving our platform to meet the evolving needs of our users.</p>
+                </div>
+            </div>
+    
+            <div class="content-section" data-points="250">
+                <h2><span class="icon">🚀</span> Join Us <span class="points">+250 XP</span></h2>
+                <div class="content-block">
+                    <p>Whether you're a beginner looking to start your cybersecurity journey or a seasoned professional
+                        wanting to hone your skills, Cyber Quest has something for you. Join our community and become a part
+                        of the mission to build a safer digital world.</p>
+                </div>
+            </div>
+    
+            <div class="content-section" data-points="300">
+                <h2><span class="icon">📬</span> Contact Us <span class="points">+300 XP</span></h2>
+                <div class="content-block">
+                    <p>If you have any questions or feedback, feel free to reach out to us. We're here to help you on your
+                        cybersecurity learning journey.</p>
+                </div>
+            </div>
+        </div>
+    
+        <div id="right">
+            <div class="floating-elements">
+                <div class="cyber-element shield" data-speed="0.5">
+                    <img src="/api/placeholder/100/100" alt="Security Shield">
+                </div>
+                <div class="cyber-element lock" data-speed="0.7">
+                    <img src="/api/placeholder/80/80" alt="Digital Lock">
+                </div>
+                <div class="cyber-element code" data-speed="0.3">
+                    <img src="/api/placeholder/120/120" alt="Code Symbol">
+                </div>
+                <div class="particles"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Parallax effect for floating elements
+            document.addEventListener('mousemove', function(e) {
+                const elements = document.querySelectorAll('.cyber-element');
+                elements.forEach(element => {
+                    const speed = element.getAttribute('data-speed');
+                    const x = (window.innerWidth - e.pageX * speed) / 100;
+                    const y = (window.innerHeight - e.pageY * speed) / 100;
+                    element.style.transform = `translateX(${x}px) translateY(${y}px)`;
+                });
+            });
+        
+            // Reveal animations on scroll
+            const sections = document.querySelectorAll('.content-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.querySelector('p').style.animation = 'fadeInUp 0.5s forwards';
+                    }
+                });
+            }, { threshold: 0.5 });
+        
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>

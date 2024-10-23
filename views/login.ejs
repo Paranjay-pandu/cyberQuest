@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Cyber Quest</title>
+    <%- include('links.ejs') %>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .login-body, .login-html {
+            height: 100%;
+            width: 100%;
+            background-color: #0B121F;
+            color: white;
+            font-family: "Solway", serif;
+        }
+
+        .login-container {
+            padding: 5vw 10vw;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-title {
+            font-size: 2.1vw;
+            color: #53d160;
+            margin-bottom: 1vw;
+            text-align: center;
+        }
+
+        .login-form {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2vw;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .login-form-group {
+            margin-bottom: 1.5vw;
+            position: relative;
+        }
+
+        .login-label {
+            color: #A4B1CD;
+            margin-bottom: 0.5vw;
+            display: block;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 0.8vw;
+            margin-bottom: 0.5vw;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .login-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(83, 209, 96, 0.3);
+        }
+
+        .login-button {
+            width: 100%;
+            background-color: #53d160;
+            padding: 0.7vw 1.5vw;
+            border-radius: 20px;
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 1vw;
+            font-family: "Solway";
+        }
+
+        .login-button:hover {
+            box-shadow: #3db845 2px 3px 5px, #3db845 -2px -3px 5px;
+            transform: translateY(-2px);
+        }
+
+        .login-error {
+            color: #ff6b6b;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .login-link {
+            color: #53d160;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .login-link:hover {
+            text-shadow: 0 0 5px #53d160;
+        }
+
+        .login-text {
+            text-align: center;
+            margin-top: 1vw;
+        }
+
+        @media (max-width: 768px) {
+            .login-title {
+                font-size: 24px;
+            }
+            
+            .login-form {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .login-input, .login-button {
+                padding: 12px;
+            }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+</head>
+<body class="login-body">
+    <%- include('cursor.ejs') %>
+    <!-- <%- include('navBar.ejs') %> -->
+    <div class="login-container">
+        <h1 class="login-title">Login</h1>
+        <% if (locals.error) { %>
+            <p class="login-error"><%= error %></p>
+        <% } %>
+        <form class="login-form" id="loginForm">
+            <div class="login-form-group">
+                <label class="login-label" for="email">Email:</label>
+                <input class="login-input" type="email" id="email" name="email" required>
+            </div>
+            <div class="login-form-group">
+                <label class="login-label" for="password">Password:</label>
+                <input class="login-input" type="password" id="password" name="password" required>
+            </div>
+            <button class="login-button" type="submit">Login</button>
+        </form>
+        <div class="or-divider">OR</div>
+        <button onclick="signInWithGoogle()" class="google-button">Login with Google</button>
+        <p class="login-text">Don't have an account? <a class="login-link" href="/signup">Sign up</a></p>
+    </div>
+
+    <script>
+        // Initialize Firebase with your config
+        const firebaseConfig = {
+            apiKey: "AIzaSyD43GgWneAiYeg165rG1LhKh8doaoR5a5o",
+            authDomain: "cyberquest-e8888.firebaseapp.com",
+            projectId: "cyberquest-e8888",
+            storageBucket: "cyberquest-e8888.appspot.com",
+            messagingSenderId: "90871092648",
+            appId: "1:90871092648:web:c8922165b9612daf8c799d"
+        };
+        
+        // Check if Firebase app is already initialized
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        // Check if user is already logged in
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            window.location.href = '/userProfile';
+        }
+
+        // Update the login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    return userCredential.user.getIdToken();
+                })
+                .then(idToken => {
+                    return fetch('/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ idToken }),
+                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        localStorage.setItem('authToken', data.user.uid);
+                        window.location.href = '/userProfile';
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Login error:', error);
+                    alert('Login failed. Please check your credentials and try again.');
+                });
+        });
+
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    return result.user.getIdToken();
+                })
+                .then(idToken => {
+                    return fetch('/auth/google', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ idToken }),
+                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        localStorage.setItem('authToken', data.user.uid);
+                        window.location.href = '/userProfile';
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Google Sign In error:', error);
+                    alert('Google Sign In failed. Please try again.');
+                });
+        }
+    </script>
+</body>
+</html>
